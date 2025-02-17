@@ -8,6 +8,9 @@ export class UsersController {
 
   @Post()
   async addUser(@Body() userDto: CreateUserDto): Promise<any> {
-    return await this.userService.createUser(userDto);
+    const user = await this.userService.createUser(userDto);
+    return user
+      ? { message: 'User created successfully', user }
+      : { message: 'Unable to create user at the moment!' };
   }
 }
