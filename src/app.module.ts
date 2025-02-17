@@ -5,6 +5,7 @@ import dbConfig from './config/db.config';
 import appConfig from './config/app.config';
 import { User } from './entities/user.entity';
 import { UsersController } from './users/users.controller';
+import { UsersService } from './users/users.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -29,5 +30,6 @@ import { UsersController } from './users/users.controller';
     }),
   ],
   controllers: [UsersController],
+  providers: [UsersService],
 })
 export class AppModule {}
