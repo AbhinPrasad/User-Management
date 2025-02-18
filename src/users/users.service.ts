@@ -36,7 +36,7 @@ export class UsersService {
       : { message: msg.createUserFailed };
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async getUserByEmail(email: string): Promise<User | null> {
     return this.users.findOne({ where: { email } });
   }
 }
