@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/common/dto/user.dto';
 import { ApiResponse, ReqInfo } from 'src/common/types';
 import { User } from 'src/entities/user.entity';
@@ -21,7 +22,13 @@ export class UsersService {
       throw new ConflictException(msg.emailExists);
     }
 
-    const user = this.users.create({ createdBy, ...userDto });
+    const hashedPassword = await bcrypt.hash(userDto.password, 10);
+
+    const user = this.users.create({
+      ...userDto,
+      createdBy,
+      password: hashedPassword,
+    });
     const newUser = await this.users.save(user);
 
     return newUser.id
