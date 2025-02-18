@@ -7,6 +7,7 @@ import { User } from './entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { APP_FILTER } from '@nestjs/core';
 import { ErrorFilter } from './common/filters/error.filter';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ErrorFilter } from './common/filters/error.filter';
       inject: [ConfigService],
     }),
     UsersModule,
+    AuthModule,
   ],
   providers: [{ provide: APP_FILTER, useClass: ErrorFilter }],
 })
