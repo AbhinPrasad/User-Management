@@ -28,7 +28,7 @@ export class User {
   @Column({ nullable: true })
   password: string;
 
-  @Column({ name: 'is_active', type: 'tinyint', width: 1, default: 1 })
+  @Column({ name: 'is_active', type: 'smallint', width: 1, default: 1 })
   isActive: number;
 
   @CreateDateColumn({

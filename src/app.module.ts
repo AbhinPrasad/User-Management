@@ -13,13 +13,13 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.local',
+      envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
       load: [appConfig, dbConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
-        type: 'mysql',
+        type: 'postgres',
         host: config.get('db.host'),
         port: +config.get('db.port'),
         username: config.get('db.user'),
