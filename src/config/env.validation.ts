@@ -19,6 +19,9 @@ class EnvironmentVariables {
 
   @IsString()
   DB_SYNC: string;
+
+  @IsString()
+  JWT_SECRET: string;
 }
 
 export function validate(config: Record<string, unknown>) {
