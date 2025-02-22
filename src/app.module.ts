@@ -7,6 +7,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { ErrorFilter } from './common/filters/error.filter';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
+import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DatabaseModule } from './database/database.module';
     DatabaseModule,
     UsersModule,
     AuthModule,
+    FirebaseModule,
   ],
   providers: [{ provide: APP_FILTER, useClass: ErrorFilter }],
 })
