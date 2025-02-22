@@ -5,9 +5,9 @@ import appConfig from './config/app.config';
 import { UsersModule } from './users/users.module';
 import { APP_FILTER } from '@nestjs/core';
 import { ErrorFilter } from './common/filters/error.filter';
-import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
-import { FirebaseModule } from './firebase/firebase.module';
+import { AuthModule } from './auth/auth.module';
+import { initializeFirebaseAdmin } from './config/firebase.config';
 
 @Module({
   imports: [
@@ -19,8 +19,11 @@ import { FirebaseModule } from './firebase/firebase.module';
     DatabaseModule,
     UsersModule,
     AuthModule,
-    FirebaseModule,
   ],
   providers: [{ provide: APP_FILTER, useClass: ErrorFilter }],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    initializeFirebaseAdmin();
+  }
+}

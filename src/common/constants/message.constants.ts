@@ -10,4 +10,9 @@ export const msg = {
   createUserFailed: 'Unable to create user at the moment.',
   getUsersListSuccess: 'Users list retrieved successfully.',
   noRecordsFound: 'No records found.',
+  userNotFound: 'Unable to retrieve user details from firebase.',
+  tokenNotFound: 'Unable to retreive token from request',
+  tokenInvalid: 'Invalid token.',
+  userRegistrationSuccess: 'User registered successfully.',
+  userRegistrationFailed: 'Unable to register user at the moment.',
 };

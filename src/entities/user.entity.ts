@@ -12,6 +12,9 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ name: 'firebase_id' })
+  firebaseId: string;
+
   @Column()
   name: string;
 
