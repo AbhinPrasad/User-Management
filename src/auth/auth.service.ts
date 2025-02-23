@@ -11,44 +11,64 @@ import { SignUpDto } from 'src/common/dto/auth.dto';
 import { User } from 'src/entities/user.entity';
 import { ApiResponse, ReqInfo } from 'src/common/types';
 import { msg } from 'src/common/constants/message.constants';
+import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 
 @Injectable()
 export class AuthService {
   constructor(@InjectRepository(User) private users: Repository<User>) {}
 
-  async createUser(user: SignUpDto, createdBy: ReqInfo): Promise<ApiResponse> {
-    await this.setCustomClaims(user.email, user.role);
+  private readonly SALT_ROUNDS = 10;
 
+  async createUser(user: SignUpDto, createdBy: ReqInfo): Promise<ApiResponse> {
     await this.checkUserExists(user.email);
 
-    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const hashedPassword = await bcrypt.hash(user.password, this.SALT_ROUNDS);
 
-    const userData = this.users.create({
-      ...user,
-      createdBy,
-      password: hashedPassword,
-    });
-    const newUser = await this.users.save(userData);
+    const newUser = await this.insertUserToDb(user, createdBy, hashedPassword);
 
-    return newUser.id
-      ? { message: msg.userRegistrationSuccess, userId: newUser.id }
-      : { message: msg.userRegistrationFailed };
+    await this.setFirebaseCustomClaims(user.firebaseId, user.role, newUser.id);
+
+    return { message: msg.userRegistrationSuccess, userId: newUser.id };
   }
 
-  async setCustomClaims(email: string, role: string): Promise<void> {
-    const userRecord = await admin.auth().getUserByEmail(email);
-    if (!userRecord) {
-      throw new BadRequestException(msg.userNotFound);
-    }
-    await admin.auth().setCustomUserClaims(userRecord.uid, { role });
-  }
-
-  async checkUserExists(email: string): Promise<void> {
+  private async checkUserExists(email: string): Promise<void> {
     const userExists = await this.users.findOne({
       where: { email },
+      select: ['id'],
     });
+
     if (userExists) {
       throw new ConflictException(msg.emailExists);
     }
+  }
+
+  private async insertUserToDb(
+    user: SignUpDto,
+    createdBy: ReqInfo,
+    password: string,
+  ): Promise<User> {
+    const userData = this.users.create({
+      ...user,
+      createdBy,
+      password,
+    });
+    const newUser = await this.users.save(userData);
+
+    if (!newUser.id) {
+      throw new BadRequestException(msg.createUserFailed);
+    }
+
+    return newUser;
+  }
+
+  private async setFirebaseCustomClaims(
+    uid: string,
+    role: string,
+    userId: string,
+  ): Promise<void> {
+    await admin.auth().setCustomUserClaims(uid, {
+      role,
+      userId,
+    });
   }
 }
