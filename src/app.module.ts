@@ -9,6 +9,7 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { initializeFirebaseAdmin } from './config/firebase.config';
 import { AuthGuard } from './common/guards/auth.guard';
+import { RolesGuard } from './common/guards/roles.guard';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthGuard } from './common/guards/auth.guard';
   ],
   providers: [
     { provide: APP_FILTER, useClass: ErrorFilter },
+    { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_GUARD, useClass: AuthGuard },
   ],
 })
