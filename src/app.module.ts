@@ -24,8 +24,8 @@ import { RolesGuard } from './common/guards/roles.guard';
   ],
   providers: [
     { provide: APP_FILTER, useClass: ErrorFilter },
-    { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
   ],
 })
 export class AppModule {

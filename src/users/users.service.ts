@@ -39,4 +39,19 @@ export class UsersService {
   async getUserByEmail(email: string): Promise<User | null> {
     return this.users.findOne({ where: { email } });
   }
+
+  async getAllUsers(): ApiResponse {
+    const users = await this.users.find({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        firebaseId: true,
+        role: true,
+      },
+    });
+    return users
+      ? { message: msg.getUsersListSuccess, users }
+      : { message: msg.noRecordsFound, users: [] };
+  }
 }

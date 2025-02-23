@@ -15,4 +15,6 @@ export const msg = {
   tokenInvalid: 'Invalid token.',
   userRegistrationSuccess: 'User registered successfully.',
   userRegistrationFailed: 'Unable to register user at the moment.',
+  accessDenied:
+    "Access Denied! You don't have the required permissions to access this.",
 };
